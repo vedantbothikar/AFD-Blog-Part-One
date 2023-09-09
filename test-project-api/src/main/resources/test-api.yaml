@@ -1,0 +1,106 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description:
+    This is a sample description
+
+servers:
+  - url: https://localhost:8080
+
+
+tags:
+
+  - name: "Books"
+    description: This is an API for Books
+  - name: "Users"
+    description: This is an API for Users
+
+
+paths:
+
+  /books/{bookId}:
+    parameters:
+      - name: bookId
+        description: Id of the book
+        schema:
+          type: string
+        in: path   # this indicates where the parameter will be coming from. We want our parameter from the path
+        required: true
+
+    get:
+      summary: Get a book by book Id
+      operationId: getBookById
+      tags:
+        - "Books"
+      responses:
+        '200':
+          description: SUCCESSFUL OPERATION
+          content: # This specifies what we are returning
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+
+
+  /books:
+
+    post:
+      summary: Creates a book
+      description: This API creates a book
+      tags:
+        - "Books"
+      operationId: createBook
+      requestBody:
+        description: Inputs for creating a book
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                type: string
+
+    get:
+      summary: Get all books
+      description: This API gets all of the books
+      tags:   # Tags here means to which tag this endpoint should be allocated to... By default, the endpoint is put into default category... Here we have specified that this endpoint should belong to Books.
+        - "Books"
+      operationId: getAllBooksInLibrary          # This specifies the name of the function/operation in your Java code
+      responses:
+        '200':
+          description: SUCCESSFUL OPERATION
+          content:    # This specifies what we are returning
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '400':
+          description: BAD REQUEST
+        '401':
+          description: UNAUTHORIZED
+
+
+
+
+components:
+  schemas:
+
+    Book:
+      description: This is a book object
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: This is the name of the book
+          type: string
+        author:
+          description: This is the author of the book
+          type: string
